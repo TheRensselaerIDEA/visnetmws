@@ -22,3 +22,6 @@ These are a few ideas...
 https://getyarn.io/yarn-find?text=:%22Les%20Miserables%20(2012)%22 
 * ...Or (better) vector into this full-length concert video:
 https://www.youtube.com/watch?v=0c2sx47p31M
+* This set of lyrics can help us cross-reference between characters, songs and videos:
+https://www.azlyrics.com/l/lesmiserablescast.html
+
