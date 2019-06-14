@@ -18,4 +18,7 @@ These are a few ideas...
 
 ## Media Sources
 
-* For selected characters we might provide links from this site: https://getyarn.io/yarn-find?text=:%22Les%20Miserables%20(2012)%22 
+* For selected characters we might provide links from this site: 
+https://getyarn.io/yarn-find?text=:%22Les%20Miserables%20(2012)%22 
+* ...Or (better) vector into this full-length concert video:
+https://www.youtube.com/watch?v=0c2sx47p31M
