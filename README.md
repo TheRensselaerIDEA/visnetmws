@@ -15,3 +15,7 @@ These are a few ideas...
 * Implement group details on the Wall: when a group is selected, show color-coded profiles of the characters in that group
 * Implement character details on the Left Monitor
 * Provide a character highlight video on the Right Monitor
+
+## Media Sources
+
+* For selected characters we might provide links from this site: https://getyarn.io/yarn-find?text=:%22Les%20Miserables%20(2012)%22 
