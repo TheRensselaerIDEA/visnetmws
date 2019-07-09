@@ -52,7 +52,6 @@ ui_win[[1]] <- fluidPage(
 
 # then we add what we want to see in the floor section
 ui_win[[2]] <- fillPage(
-#  titlePanel("Visnetwork Explorer: Network"),
   visNetworkOutput(outputId="network", width = "100%", height = "1080px")
 )
 
@@ -114,7 +113,14 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[10], color = myColors[10], shape = "circle") %>%
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
-                           shape = "circle", color = myPalette, force = TRUE) 
+                           shape = "circle", color = myPalette, force = TRUE) %>%
+    
+    # Must put visEvents within visNetwork fn
+    visEvents(click = "function(properties){
+              # alert('test response');
+    }")
+    
+    
   })
   
 }
