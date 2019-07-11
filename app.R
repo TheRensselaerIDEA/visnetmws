@@ -57,7 +57,8 @@ ui_win[[2]] <- fillPage(
 )
 
 ui_win[[3]] <- fluidPage(
-  titlePanel("Visnetwork Explorer: Wall")
+  titlePanel("Visnetwork Explorer: Wall"),
+  uiOutput("Wall")
 )
 
 
@@ -66,11 +67,27 @@ serv_calc <- list()
 
 # Not sure what goes here for this example
 serv_calc[[1]] <- function(input,calc){
-
+  
 }
 
 
 serv_out <- list()
+
+
+#RenderUI for wall'
+serv_out[["Wall"]] <-function(input,calc){
+  renderUI({
+    
+    if(!is.null(input$current_node_id)){
+      print( input$current_node_id)
+    }
+    else{
+      print("you do not click a node yet")
+    }
+    
+  })
+  
+}
 
 # Here we render our network
 # note the name is the same as the outputid
@@ -114,9 +131,20 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[10], color = myColors[10], shape = "circle") %>%
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
-                           shape = "circle", color = myPalette, force = TRUE) 
+                           shape = "circle", color = myPalette, force = TRUE) %>%
+      #This is the event function: store the nodes id in input$current_node_id
+      visEvents(select = "function(nodes) {
+                Shiny.onInputChange('current_node_id', nodes.nodes);
+                ;}")
   })
   
+  
+ 
+  
+  
+  
+  
+ 
 }
 
 # NEW: Run with dependencies 
