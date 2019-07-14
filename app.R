@@ -77,9 +77,11 @@ serv_out <- list()
 #RenderUI for wall'
 serv_out[["Wall"]] <-function(input,calc){
   renderUI({
+    # This is importent to convert current_node_id into a list or a dataframe
+    x <- as.list(input$current_node_id)
     
     if(!is.null(input$current_node_id)){
-      print( input$current_node_id)
+      print( x)
     }
     else{
       print("you do not click a node yet")
@@ -132,6 +134,7 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
                            shape = "circle", color = myPalette, force = TRUE) %>%
+      visOptions(nodesIdSelection = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
       visEvents(select = "function(nodes) {
                 Shiny.onInputChange('current_node_id', nodes.nodes);
