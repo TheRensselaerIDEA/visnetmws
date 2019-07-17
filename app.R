@@ -167,4 +167,3 @@ serv_out[["network"]] <- function(input, calc){
 
 # NEW: Run with dependencies 
 mwsApp(win_titles, ui_win, serv_calc, serv_out, depend)
->>>>>>> c387bd5404c87d7ca3f598e1f613aacf49b3db7d
