@@ -52,11 +52,22 @@ ui_win[[1]] <- fluidPage(
 
 # then we add what we want to see in the floor section
 ui_win[[2]] <- fillPage(
+#  titlePanel("Visnetwork Explorer: Network"),
   visNetworkOutput(outputId="network", width = "100%", height = "1080px")
 )
 
 ui_win[[3]] <- fluidPage(
-  verbatimTextOutput("wall_info")
+  titlePanel("visnetmws"),
+  sidebarLayout(position = "left",
+    sidebarPanel(
+      textOutput("node_name"),
+      imageOutput("node_pic")
+      
+    ),
+    mainPanel(
+      textOutput("node_desc")
+    )
+  )
 )
 
 
@@ -65,11 +76,36 @@ serv_calc <- list()
 
 # Not sure what goes here for this example
 serv_calc[[1]] <- function(input,calc){
-
+  
 }
 
 
 serv_out <- list()
+
+
+# #RenderUI for wall'
+# serv_out[["Wall"]] <-function(input,calc){
+#   renderUI({
+#     if(!is.null(input$current_node_id)){
+#       print( input$current_node_id)
+#     }
+#     else{
+#       print("Node not selected")
+#     }
+#   })
+# }
+
+serv_out[["node_desc"]] <- function (input, calc) {
+  renderText({
+    if(!is.null(input$current_node_id)){
+      input$current_node_id
+    } else {
+      "Node not selected"
+    }
+    
+  })
+  
+}
 
 # Here we render our network
 # note the name is the same as the outputid
@@ -113,12 +149,22 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[10], color = myColors[10], shape = "circle") %>%
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
-                           shape = "circle", color = myPalette, force = TRUE)
-    
+                           shape = "circle", color = myPalette, force = TRUE) %>%
+      #This is the event function: store the nodes id in input$current_node_id
+      visEvents(select = "function(nodes) {
+                Shiny.onInputChange('current_node_id', nodes.nodes);
+                ;}")
   })
   
+  
+ 
+  
+  
+  
+  
+ 
 }
-
 
 # NEW: Run with dependencies 
 mwsApp(win_titles, ui_win, serv_calc, serv_out, depend)
+>>>>>>> c387bd5404c87d7ca3f598e1f613aacf49b3db7d
