@@ -56,7 +56,7 @@ ui_win[[2]] <- fillPage(
 )
 
 ui_win[[3]] <- fluidPage(
-  titlePanel("Visnetwork Explorer: Wall")
+  verbatimTextOutput("wall_info")
 )
 
 
@@ -113,17 +113,12 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[10], color = myColors[10], shape = "circle") %>%
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
-                           shape = "circle", color = myPalette, force = TRUE) %>%
-    
-    # Must put visEvents within visNetwork fn
-    visEvents(click = "function(properties){
-              # alert('test response');
-    }")
-    
+                           shape = "circle", color = myPalette, force = TRUE)
     
   })
   
 }
+
 
 # NEW: Run with dependencies 
 mwsApp(win_titles, ui_win, serv_calc, serv_out, depend)
