@@ -52,13 +52,22 @@ ui_win[[1]] <- fluidPage(
 
 # then we add what we want to see in the floor section
 ui_win[[2]] <- fillPage(
-#  titlePanel("Visnetwork Explorer: Network"),
+  #  titlePanel("Visnetwork Explorer: Network"),
   visNetworkOutput(outputId="network", width = "100%", height = "1080px")
 )
 
 ui_win[[3]] <- fluidPage(
-  titlePanel("Visnetwork Explorer: Wall"),
-  uiOutput("Wall")
+  titlePanel("visnetmws"),
+  sidebarLayout(position = "left",
+                sidebarPanel(
+                  textOutput("node_name"),
+                  imageOutput("node_pic")
+                  
+                ),
+                mainPanel(
+                  textOutput("node_desc")
+                )
+  )
 )
 
 
@@ -74,22 +83,53 @@ serv_calc[[1]] <- function(input,calc){
 serv_out <- list()
 
 
-#RenderUI for wall'
-serv_out[["Wall"]] <-function(input,calc){
-  renderUI({
-    # This is importent to convert current_node_id into a list or a dataframe
-    x <- as.list(input$current_node_id)
-    
+# #RenderUI for wall'
+# serv_out[["Wall"]] <-function(input,calc){
+#   renderUI({
+#     if(!is.null(input$current_node_id)){
+#       print( input$current_node_id)
+#     }
+#     else{
+#       print("Node not selected")
+#     }
+#   })
+# }
+
+serv_out[["node_desc"]] <- function (input, calc) {
+  renderText({
+
+
     if(!is.null(input$current_node_id)){
-      print( x)
+      paste("node id: ",input$current_node_id[['id']], "\nGroup: ", input$current_node_id[['group']])
+      #input$nodes$id[which(id==1)]
+    } else {
+      "Node not selected"
     }
-    else{
-      print("you do not click a node yet")
-    }
-    
+
   })
-  
+
 }
+
+
+
+
+# add a image on the wall
+
+#serv_out[["node_pic"]] <- function (input, calc) {
+#  renderImage({
+#    if(!is.null(input$current_node_id)){
+#      
+#    }else{
+#
+#      return(list(
+#        src = "images/rpi.png",
+#        contentType = "image/png",
+#        alt = "IDEA"
+#      ))
+#    }
+#  }, deleteFile = FALSE)
+#}
+
 
 # Here we render our network
 # note the name is the same as the outputid
@@ -134,20 +174,21 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
                            shape = "circle", color = myPalette, force = TRUE) %>%
-      visOptions(nodesIdSelection = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
-      visEvents(select = "function(nodes) {
-                Shiny.onInputChange('current_node_id', nodes.nodes);
+      visEvents(selectNode = "function(properties) {
+                
+                Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
+                    'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
                 ;}")
-  })
-  
-  
- 
+})
   
   
   
   
- 
+  
+  
+  
+  
 }
 
 # NEW: Run with dependencies 
