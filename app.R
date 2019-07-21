@@ -57,17 +57,8 @@ ui_win[[2]] <- fillPage(
 )
 
 ui_win[[3]] <- fluidPage(
-  titlePanel("visnetmws"),
-  sidebarLayout(position = "left",
-    sidebarPanel(
-      textOutput("node_name"),
-      imageOutput("node_pic")
-      
-    ),
-    mainPanel(
-      textOutput("node_desc")
-    )
-  )
+  titlePanel("Visnetwork Explorer: Wall"),
+  uiOutput("Wall")
 )
 
 
@@ -83,24 +74,17 @@ serv_calc[[1]] <- function(input,calc){
 serv_out <- list()
 
 
-# #RenderUI for wall'
-# serv_out[["Wall"]] <-function(input,calc){
-#   renderUI({
-#     if(!is.null(input$current_node_id)){
-#       print( input$current_node_id)
-#     }
-#     else{
-#       print("Node not selected")
-#     }
-#   })
-# }
-
-serv_out[["node_desc"]] <- function (input, calc) {
-  renderText({
+#RenderUI for wall'
+serv_out[["Wall"]] <-function(input,calc){
+  renderUI({
+    # This is importent to convert current_node_id into a list or a dataframe
+    x <- as.list(input$current_node_id)
+    
     if(!is.null(input$current_node_id)){
-      input$current_node_id
-    } else {
-      "Node not selected"
+      print( x)
+    }
+    else{
+      print("you do not click a node yet")
     }
     
   })
@@ -150,6 +134,7 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
                            shape = "circle", color = myPalette, force = TRUE) %>%
+      visOptions(nodesIdSelection = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
       visEvents(select = "function(nodes) {
                 Shiny.onInputChange('current_node_id', nodes.nodes);
