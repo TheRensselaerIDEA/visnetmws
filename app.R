@@ -12,7 +12,7 @@ if (!require("shiny")) {
 }
 
 if (!require("mwshiny")) {
-  install.packages("https://cran.r-project.org/src/contrib/mwshiny_0.1.0.tar.gz", repo=NULL, type="source")
+  install.packages("http://cran.r-project.org/src/contrib/mwshiny_1.1.0.tar.gz", repo=NULL, type="source")
   library(mwshiny)
 }
 
@@ -57,7 +57,17 @@ ui_win[[2]] <- fillPage(
 )
 
 ui_win[[3]] <- fluidPage(
-  titlePanel("Visnetwork Explorer: Wall")
+  titlePanel("visnetmws"),
+  sidebarLayout(position = "left",
+    sidebarPanel(
+      textOutput("node_name"),
+      imageOutput("node_pic")
+      
+    ),
+    mainPanel(
+      textOutput("node_desc")
+    )
+  )
 )
 
 
@@ -66,11 +76,36 @@ serv_calc <- list()
 
 # Not sure what goes here for this example
 serv_calc[[1]] <- function(input,calc){
-
+  
 }
 
 
 serv_out <- list()
+
+
+# #RenderUI for wall'
+# serv_out[["Wall"]] <-function(input,calc){
+#   renderUI({
+#     if(!is.null(input$current_node_id)){
+#       print( input$current_node_id)
+#     }
+#     else{
+#       print("Node not selected")
+#     }
+#   })
+# }
+
+serv_out[["node_desc"]] <- function (input, calc) {
+  renderText({
+    if(!is.null(input$current_node_id)){
+      input$current_node_id
+    } else {
+      "Node not selected"
+    }
+    
+  })
+  
+}
 
 # Here we render our network
 # note the name is the same as the outputid
@@ -114,9 +149,20 @@ serv_out[["network"]] <- function(input, calc){
       visGroups(groupname = nodes$group[10], color = myColors[10], shape = "circle") %>%
       visGroups(groupname = nodes$group[11], color = myColors[11], shape = "circle") %>%
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
-                           shape = "circle", color = myPalette, force = TRUE) 
+                           shape = "circle", color = myPalette, force = TRUE) %>%
+      #This is the event function: store the nodes id in input$current_node_id
+      visEvents(select = "function(nodes) {
+                Shiny.onInputChange('current_node_id', nodes.nodes);
+                ;}")
   })
   
+  
+ 
+  
+  
+  
+  
+ 
 }
 
 # NEW: Run with dependencies 
