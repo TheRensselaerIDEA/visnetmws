@@ -100,6 +100,23 @@ serv_out[["node_desc"]] <- function (input, calc) {
   })
 }
 
+# add a image on the wall
+
+#serv_out[["node_pic"]] <- function (input, calc) {
+#  renderImage({
+#    if(!is.null(input$current_node_id)){
+#      
+#    }else{
+#
+#      return(list(
+#        src = "images/rpi.png",
+#        contentType = "image/png",
+#        alt = "IDEA"
+#      ))
+#    }
+#  }, deleteFile = FALSE)
+#}
+
 
 # Here we render our network
 # note the name is the same as the outputid
@@ -145,8 +162,10 @@ serv_out[["network"]] <- function(input, calc){
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
                            shape = "circle", color = myPalette, force = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
-      visEvents(select = "function(nodes) {
-                Shiny.onInputChange('current_node_id', nodes.nodes);
+      visEvents(selectNode = "function(properties) {
+                
+                Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
+                    'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
                 ;}")
   })
   
