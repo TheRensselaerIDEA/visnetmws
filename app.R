@@ -159,8 +159,8 @@ serv_out[["network"]] <- function(input, calc){
                            shape = "circle", color = myPalette, force = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
       visEvents(selectNode = "function(nodes) {
-                Shiny.onInputChange('current_node_id', nodes.nodes);"
-                )
+                Shiny.onInputChange('current_node_id', nodes.nodes);
+                ;}")
                 # "function(properties) {
                 # Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
                 #     'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
