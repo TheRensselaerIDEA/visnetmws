@@ -102,20 +102,16 @@ serv_out[["node_desc"]] <- function (input, calc) {
 
 # add a image on the wall
 
-#serv_out[["node_pic"]] <- function (input, calc) {
+# serv_out[["node_pic"]] <- function (input, calc) {
 #  renderImage({
 #    if(!is.null(input$current_node_id)){
 #      
-#    }else{
-#
-#      return(list(
-#        src = "images/rpi.png",
-#        contentType = "image/png",
-#        alt = "IDEA"
-#      ))
+#      filename <-input$current_node_id[["picture"]]
+#      list( src = filename)
+#      
 #    }
 #  }, deleteFile = FALSE)
-#}
+# }
 
 
 # Here we render our network
@@ -123,7 +119,7 @@ serv_out[["node_desc"]] <- function (input, calc) {
 serv_out[["network"]] <- function(input, calc){
   renderVisNetwork({
     # minimal example
-    nodes <- read_csv("nodes.csv", col_types = "iccic")
+    nodes <- read_csv("nodes.csv", col_types = "iccicc")
     edges <- read_csv("edges.csv", col_types = "iiic")
     
     myColors <-   c("#97c2fc",  # 0
@@ -162,11 +158,13 @@ serv_out[["network"]] <- function(input, calc){
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
                            shape = "circle", color = myPalette, force = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
-      visEvents(selectNode = "function(properties) {
-                
-                Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
-                    'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
-                ;}")
+      visEvents(selectNode = "function(nodes) {
+                Shiny.onInputChange('current_node_id', nodes.nodes);"
+                )
+                # "function(properties) {
+                # Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
+                #     'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
+                # ;}")
   })
   
 }
