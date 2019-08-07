@@ -77,24 +77,14 @@ serv_calc[[1]] <- function(input,calc){
 
 serv_out <- list()
 
-
-# #RenderUI for wall'
-# serv_out[["Wall"]] <-function(input,calc){
-#   renderUI({
-#     if(!is.null(input$current_node_id)){
-#       print( input$current_node_id)
-#     }
-#     else{
-#       print("Node not selected")
-#     }
-#   })
-# }
-
 serv_out[["node_desc"]] <- function (input, calc) {
   renderText({
     if(!is.null(input$current_node_id)){
-      name <- nodes[input$current_node_id+1, 5]
-      paste("ID:", input$current_node_id, "\n Name:", name)
+      if (typeof(input$current_node_id) == "character") {
+        paste("ID:", input$current_node_id)
+      }
+        name <- nodes[input$current_node_id+1, 5]
+        paste("ID:", input$current_node_id, "\n Name:", name)
     } else {
       "Node not selected"
     }
@@ -106,17 +96,15 @@ serv_out[["node_desc"]] <- function (input, calc) {
 serv_out[["node_pic"]] <- function (input, calc) {
  renderImage({
    if(!is.null(input$current_node_id)){
-     # huh <<- input$current_node_id
-     # node_id <<- unlist(strsplit(input$current_node_id, split=":", fixed=TRUE))
      
      node_id <<- input$current_node_id
-     print(typeof(node_id), stderr())
+     
      if (typeof(node_id) == "character") {
-       list(src = "Pictures/Blank.jpg", alt = "blah blah")
+       list(src = "Pictures/Blank.jpg", alt = "No photo available.", width = "400px", height = "400px")
      } else {
        tmp <<- as.character(nodes[node_id+1, 6])
        
-       list(src = tmp, alt = "blah blah blah", width = "400px", height = "400px")
+       list(src = tmp, alt = nodes[input$current_node_id+1, 5], width = "400px", height = "400px")
      }
 
    }
@@ -171,10 +159,6 @@ serv_out[["network"]] <- function(input, calc){
       visEvents(selectNode = "function(nodes) {
                 Shiny.onInputChange('current_node_id', nodes.nodes);
                 ;}")
-                # "function(properties) {
-                # Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
-                #     'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
-                # ;}")
   })
   
 }
