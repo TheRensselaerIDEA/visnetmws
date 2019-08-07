@@ -100,7 +100,7 @@ serv_out[["node_pic"]] <- function (input, calc) {
      node_id <<- input$current_node_id
      
      if (typeof(node_id) == "character") {
-       list(src = "Pictures/Blank.jpg", alt = "No photo available.", width = "400px", height = "400px")
+       list(src = "Pictures/Blank.png", alt = "No photo available.", width = "400px", height = "400px")
      } else {
        tmp <<- as.character(nodes[node_id+1, 6])
        
