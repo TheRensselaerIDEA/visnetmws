@@ -93,7 +93,8 @@ serv_out <- list()
 serv_out[["node_desc"]] <- function (input, calc) {
   renderText({
     if(!is.null(input$current_node_id)){
-      input$current_node_id
+      name <- nodes[input$current_node_id+1, 5]
+      paste("ID:", input$current_node_id, "\n Name:", name)
     } else {
       "Node not selected"
     }
@@ -102,16 +103,25 @@ serv_out[["node_desc"]] <- function (input, calc) {
 
 # add a image on the wall
 
-# serv_out[["node_pic"]] <- function (input, calc) {
-#  renderImage({
-#    if(!is.null(input$current_node_id)){
-#      
-#      filename <-input$current_node_id[["picture"]]
-#      list( src = filename)
-#      
-#    }
-#  }, deleteFile = FALSE)
-# }
+serv_out[["node_pic"]] <- function (input, calc) {
+ renderImage({
+   if(!is.null(input$current_node_id)){
+     # huh <<- input$current_node_id
+     # node_id <<- unlist(strsplit(input$current_node_id, split=":", fixed=TRUE))
+     
+     node_id <<- input$current_node_id
+     print(typeof(node_id), stderr())
+     if (typeof(node_id) == "character") {
+       list(src = "Pictures/Blank.jpg", alt = "blah blah")
+     } else {
+       tmp <<- as.character(nodes[node_id+1, 6])
+       
+       list(src = tmp, alt = "blah blah blah", width = "400px", height = "400px")
+     }
+
+   }
+ }, deleteFile = FALSE)
+}
 
 
 # Here we render our network
@@ -119,7 +129,7 @@ serv_out[["node_desc"]] <- function (input, calc) {
 serv_out[["network"]] <- function(input, calc){
   renderVisNetwork({
     # minimal example
-    nodes <- read_csv("nodes.csv", col_types = "iccicc")
+    nodes <<- read_csv("nodes.csv", col_types = "iccicc")
     edges <- read_csv("edges.csv", col_types = "iiic")
     
     myColors <-   c("#97c2fc",  # 0
@@ -170,4 +180,4 @@ serv_out[["network"]] <- function(input, calc){
 }
 
 # NEW: Run with dependencies
-mwsApp(win_titles, ui_win, serv_calc)
+mwsApp(ui_win, serv_calc, serv_out)
