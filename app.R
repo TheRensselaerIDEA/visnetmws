@@ -12,8 +12,13 @@ if (!require("shiny")) {
 }
 
 if (!require("mwshiny")) {
-  install.packages("https://cran.r-project.org/src/contrib/mwshiny_0.1.0.tar.gz", repo=NULL, type="source")
+  install.packages("https://cran.r-project.org/src/contrib/mwshiny_2.0.0.tar.gz", repo=NULL, type="source")
   library(mwshiny)
+}
+
+if (!require("devtools")) {
+  install.packages("devtools")
+  library(devtools)
 }
 
 if (!require("visNetwork")) {
@@ -31,32 +36,22 @@ if (!require("htmlwidgets")) {
   library(htmlwidgets)
 }
 
-# Hannah's dependancy fixer
-# Alloctate our named dependency list
-depend <- list()
 
-# names of the list correspond to the package we want to import
-# we give each of them the value of a vector of strings corresponding to the specific scripts we want to import
-depend[["htmlwidgets"]] <- c("www/htmlwidgets.js")
-depend[["visNetwork"]] <- c("htmlwidgets/lib/vis/vis.css", "htmlwidgets/lib/vis/vis.min.js", "htmlwidgets/visNetwork.js")
-
-# vector of strings that are the names of my windows
-win_titles <- c("Controller","Floor", "Wall")
 
 ui_win <- list()
 
 # first we add what we want to see in the controller to the list
-ui_win[[1]] <- fluidPage(
+ui_win[["Controller"]] <- fluidPage(
   titlePanel("Visnetwork Explorer: Controller")
 )
 
 # then we add what we want to see in the floor section
-ui_win[[2]] <- fillPage(
+ui_win[["Floor"]] <- fillPage(
 #  titlePanel("Visnetwork Explorer: Network"),
   visNetworkOutput(outputId="network", width = "100%", height = "1080px")
 )
 
-ui_win[[3]] <- fluidPage(
+ui_win[["Wall"]] <- fluidPage(
   titlePanel("visnetmws"),
   sidebarLayout(position = "left",
     sidebarPanel(
@@ -102,10 +97,26 @@ serv_out[["node_desc"]] <- function (input, calc) {
     } else {
       "Node not selected"
     }
-    
   })
-  
 }
+
+# add a image on the wall
+
+#serv_out[["node_pic"]] <- function (input, calc) {
+#  renderImage({
+#    if(!is.null(input$current_node_id)){
+#      
+#    }else{
+#
+#      return(list(
+#        src = "images/rpi.png",
+#        contentType = "image/png",
+#        alt = "IDEA"
+#      ))
+#    }
+#  }, deleteFile = FALSE)
+#}
+
 
 # Here we render our network
 # note the name is the same as the outputid
@@ -151,19 +162,14 @@ serv_out[["network"]] <- function(input, calc){
       visClusteringByGroup(groups = groups.closed, label = "Group: ", 
                            shape = "circle", color = myPalette, force = TRUE) %>%
       #This is the event function: store the nodes id in input$current_node_id
-      visEvents(select = "function(nodes) {
-                Shiny.onInputChange('current_node_id', nodes.nodes);
+      visEvents(selectNode = "function(properties) {
+                
+                Shiny.onInputChange('current_node_id',{'id':this.body.data.nodes.get(properties.nodes[0]).id,
+                    'group':  this.body.data.nodes.get(properties.nodes[0]).group      });
                 ;}")
   })
   
-  
- 
-  
-  
-  
-  
- 
 }
 
-# NEW: Run with dependencies 
-mwsApp(win_titles, ui_win, serv_calc, serv_out, depend)
+# NEW: Run with dependencies
+mwsApp(win_titles, ui_win, serv_calc)
