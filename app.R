@@ -145,9 +145,6 @@ for (pic_name in pic_names) {
                         "\")}, deleteFile = FALSE)}",
                         sep="")
   
-  cat(paste("this is wack but", pic_name_fn, "\n"), stderr())
-  
-  
   
   serv_out[[pic_name]] <- eval(parse(text = pic_name_fn))
   
