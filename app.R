@@ -165,10 +165,6 @@ for (pic_name in pic_names) {
   # }
 }
 
-
-
-
-
 serv_out[["test_Blank.jpg"]] <- function(input, calc) {
   renderImage(
     {list(src="www/Blank.jpg")},
@@ -241,6 +237,13 @@ serv_out[["network"]] <- function(input, calc){
                 ;}")
   })
   
+  
+ 
+  
+  
+  
+  
+ 
 }
 
 # NEW: Run with dependencies
